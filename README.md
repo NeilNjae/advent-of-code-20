@@ -1,9 +1,9 @@
 ---
-title: "Advent of Code 2019"
+title: "Advent of Code 2020"
 output: html_document
 css: modest.css
 ---
-Code to solve the [Advent of Code](http://adventofcode.com/2019/) puzzles. This year, I'm using the puzzles to develop my skills in [Haskell](https://wiki.haskell.org/Haskell). I'm writing up a [commentary on these puzzles and my solutions](https://work.njae.me.uk/tag/advent-of-code/) on my blog.
+Code to solve the [Advent of Code](http://adventofcode.com/2020/) puzzles. This year, I'm using the puzzles to develop my skills in [Haskell](https://wiki.haskell.org/Haskell). I'm writing up a [commentary on these puzzles and my solutions](https://work.njae.me.uk/tag/advent-of-code/) on my blog.
 
 [Learn you a Haskell](http://learnyouahaskell.com/chapters), [Introduction to Haskell 98](https://www.haskell.org/tutorial/index.html), and [Hackage](https://hackage.haskell.org/) are good resources.
 
@@ -83,17 +83,6 @@ stack exec hp2ps advent01.hp
 # Packages
 
 Stack is using the [14.16-lts resolver](https://www.stackage.org/lts-14.16) for packages, so make sure you read the [correct documentation for the packages included in it](https://www.stackage.org/lts-14.16/docs).
-
-When you use a new package, use 
-
-```
-stack solver
-```
-to see how the `stack.yaml` file needs to change, and 
-```
-stack solver --update-yaml
-```
-to implement the changes.
 
 # Readme
 

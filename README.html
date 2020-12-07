@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Advent of Code 2020</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="modest.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header>
+<h1 class="title">Advent of Code 2020</h1>
+</header>
+<p>Code to solve the <a href="http://adventofcode.com/2020/">Advent of Code</a> puzzles. This year, I’m using the puzzles to develop my skills in <a href="https://wiki.haskell.org/Haskell">Haskell</a>. I’m writing up a <a href="https://work.njae.me.uk/tag/advent-of-code/">commentary on these puzzles and my solutions</a> on my blog.</p>
+<p><a href="http://learnyouahaskell.com/chapters">Learn you a Haskell</a>, <a href="https://www.haskell.org/tutorial/index.html">Introduction to Haskell 98</a>, and <a href="https://hackage.haskell.org/">Hackage</a> are good resources.</p>
+<p>The <a href="https://docs.haskellstack.org/en/stable/README/">Stack documentation</a> and <a href="http://howistart.org/posts/haskell/1/">How I Start: Haskell</a> are good sources of using the tools.</p>
+<h1 id="toolchain">Toolchain</h1>
+<p>I’m using the basic Haskell Platform installation, together with <code>stack</code> to manage the packages and dependencies (install with</p>
+<pre><code>$ sudo aptitude install haskell-platform haskell-stack</code></pre>
+<p>), then updgrade with</p>
+<pre><code> stack upgrade --binary-only</code></pre>
+<p>as the version in the Ubuntu repos is too old to work with current Haskell Stack package sets.</p>
+<h2 id="creating-the-repository-and-project">Creating the repository and project</h2>
+<p>Create the repository as normal: create the project in Gitolite, clone it, and insert the <code>.gitignore</code> and <code>README.md</code> files.</p>
+<p>There’s one package per day, with the code for each package in sub-directories of the root directory.</p>
+<p>Create the basic <code>stack</code> project. This will create a new directory. Note that this new directory name can’t have a hyphen-delimited word that’s just digits, so the project will have to be <code>advent-of-code</code></p>
+<pre><code>stack new advent-of-code --bare simple</code></pre>
+<p>Modify the <code>stack.yaml</code> file as needed, such as adding the <code>ghc-options</code> stanza.</p>
+<h2 id="creating-subsequent-days">Creating subsequent days</h2>
+<p>Each day lives in a separate directory, with its own <code>package.yaml</code> file and code in the <code>src</code> directory. (I based this configuration from <a href="https://github.com/mstksg/advent-of-code-2018">mstksg’s setup</a>.)</p>
+<p>Compile with</p>
+<pre><code>stack build</code></pre>
+<p>or</p>
+<pre><code>stack build advent01</code></pre>
+<p>Run with</p>
+<pre><code>stack exec advent01</code></pre>
+<p>If you want to pass in additional RTS parameters, do it like this:</p>
+<pre><code>stack exec -- advent01 +RTS -K0 -RTS</code></pre>
+<p>Run interactively with</p>
+<pre><code>stack ghci advent01</code></pre>
+<p>or</p>
+<pre><code>stack ghci advent01:exe:advent01</code></pre>
+<p>if the first form is ambiguous.</p>
+<p>To profile, use</p>
+<pre><code>stack build --executable-profiling --library-profiling --ghc-options=&quot;-fprof-auto -rtsopts&quot; advent01</code></pre>
+<p>then run with</p>
+<pre><code>stack exec --profile -- advent01 +RTS -p -hy</code></pre>
+<p>Generate the profile graph with</p>
+<pre><code>stack exec hp2ps advent01.hp</code></pre>
+<h1 id="packages">Packages</h1>
+<p>Stack is using the <a href="https://www.stackage.org/lts-14.16">14.16-lts resolver</a> for packages, so make sure you read the <a href="https://www.stackage.org/lts-14.16/docs">correct documentation for the packages included in it</a>.</p>
+<h1 id="readme">Readme</h1>
+<p>Build this readme file wth</p>
+<pre><code>pandoc -s README.md &gt; README.html</code></pre>
+<p>(Using the <a href="https://github.com/markdowncss/modest">Modest style</a>.)</p>
+</body>
+</html>
