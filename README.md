@@ -82,7 +82,7 @@ stack exec hp2ps advent01.hp
 
 # Packages
 
-Stack is using the [14.16-lts resolver](https://www.stackage.org/lts-14.16) for packages, so make sure you read the [correct documentation for the packages included in it](https://www.stackage.org/lts-14.16/docs).
+Stack is using the [14.16-lts resolver](https://www.stackage.org/lts-16.25) for packages, so make sure you read the [correct documentation for the packages included in it](https://www.stackage.org/lts-16.25/docs).
 
 # Readme
 
