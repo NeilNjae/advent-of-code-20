@@ -2,7 +2,7 @@
 # Cabal file when you run `stack build`. See the hpack website for help with
 # this file: <https://github.com/sol/hpack>.
 
-name: advent01
+name: advent02
 synopsis: Advent of Code
 version: '0.0.1'
 
@@ -51,8 +51,10 @@ default-extensions:
 - ViewPatterns
 
 executables:
-  advent01:
-    main: advent01.hs
+  advent02:
+    main: advent02.hs
     source-dirs: src
     dependencies:
     - base >= 2 && < 6
+    - text
+    - megaparsec

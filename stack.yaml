@@ -36,6 +36,7 @@ ghc-options:
 packages:
 # - .
 - advent01
+- advent02
 
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
