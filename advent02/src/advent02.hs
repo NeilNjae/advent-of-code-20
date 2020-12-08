@@ -23,7 +23,6 @@ main =
       let policies = successfulParse text
       print $ part1 policies
       print $ part2 policies
-      -- print $ head $ part2 nums
 
 part1 = length . filter inRange
   where nCharsPresent p = length $ filter (== (character p)) (password p)
@@ -56,9 +55,8 @@ passwordP = some alphaNumChar <* sc
 
 policiesP = many policyP
 policyP = Policy <$> integerP <* hyphenP <*> integerP <*> characterP <* colonP <*> passwordP
--- policyP = (,,,) <$> integerP <* hyphenP <*> integerP <*> characterP <* colonP <*> passwordP
 
--- successfulParse :: Text -> [Policy]
+successfulParse :: Text -> [Policy]
 successfulParse input = 
   case parse policiesP "input" input of
     Left  _err -> [] -- TIO.putStr $ T.pack $ parseErrorPretty err
