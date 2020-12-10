@@ -41,7 +41,7 @@ matches p = ((pw!!l) == c) /= ((pw!!u) == c)
 type Parser = Parsec Void Text
 
 sc :: Parser ()
-sc = L.space (skipSome spaceChar) CA.empty CA.empty
+sc = L.space space1 CA.empty CA.empty
 -- sc = L.space (skipSome (char ' ')) CA.empty CA.empty
 
 lexeme  = L.lexeme sc
