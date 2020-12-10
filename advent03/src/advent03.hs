@@ -9,7 +9,6 @@ main :: IO ()
 main = 
   do  text <- readFile "data/advent03.txt"
       let (trees, maxCorner) = readGrid text
-      -- print $ trees == rg2 text
       print $ part1 trees maxCorner
       print $ part2 trees maxCorner
 
