@@ -14,7 +14,7 @@ import qualified Control.Applicative as CA
 import qualified Data.Map.Strict as M
 import qualified Data.Set as S
 import Data.Char
-import Data.List
+-- import Data.List
 
 -- import Text.Megaparsec.Debug
 
@@ -29,7 +29,7 @@ main :: IO ()
 main = 
   do  text <- TIO.readFile "data/advent04.txt"
       let passports = successfulParse text
-      -- print $ length passports
+      print $ length passports
       putStrLn $ runTests
       print $ part1 passports
       print $ part2 passports
@@ -62,12 +62,12 @@ validRanged lower upper value =
   where v = read @Int value 
 
 validHeight value = 
-  if "cm" `isSuffixOf` value
+  if u == "cm"
   then validRanged 150 193 v
-  else if "in" `isSuffixOf` value
+  else if u == "in"
        then validRanged 59 76 v
        else False
-  where v = reverse $ drop 2 $ reverse value
+  where (v, u) = span isDigit value
 
 validHex value = (length value == 7) && (head value == '#') && (all isHexDigit $ tail value)
 
