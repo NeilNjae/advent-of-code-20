@@ -1,7 +1,7 @@
 -- import Debug.Trace
 
 import Numeric
-import qualified Data.Set as S
+import Data.List
 
 main :: IO ()
 main = 
@@ -12,12 +12,11 @@ main =
 
 part1 = maximum . map convert
 
-part2 passes = S.elemAt 0 $ expecteds `S.difference` knowns
+part2 passes = head $ expecteds \\ ns
   where ns = map convert passes
         highest = maximum ns
         lowest  = minimum ns
-        knowns = S.fromList ns
-        expecteds = S.fromList [lowest..highest]
+        expecteds = [lowest..highest]
 
 directionToInt :: Char -> Int
 directionToInt dir = if dir `elem` "BR" then 1 else 0
