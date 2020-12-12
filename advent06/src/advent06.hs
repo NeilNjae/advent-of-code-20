@@ -30,9 +30,9 @@ blankLines = skipMany1 endOfLine
 personP = S.fromList <$> many1 letter
 groupP = sepBy1 personP endOfLine
 
-groupsP = sepBy1 groupP blankLines
+groupsP = sepBy groupP blankLines
 
--- successfulParse :: Text -> [Passport]
+successfulParse :: Text -> [[S.Set Char]]
 successfulParse input = 
   case parseOnly groupsP input of
     Left  _err -> [] -- TIO.putStr $ T.pack $ parseErrorPretty err
