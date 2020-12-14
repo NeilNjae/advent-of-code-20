@@ -47,13 +47,6 @@ part2 program = filter terminates $ map runProgram programs
 
 
 executeMany visited machine
-  -- if currentIP `S.member` visited
-  -- then Looped (machineAcc machine)
-  -- else if currentIP == programSize
-  --      then Terminated (machineAcc machine)
-  --      else if currentIP > programSize
-  --           then OutOfBounds (machineAcc machine) currentIP
-  --           else executeMany visited' machine'
   | currentIP `S.member` visited = Looped (machineAcc machine)
   | currentIP == programSize     = Terminated (machineAcc machine)
   | currentIP > programSize      = OutOfBounds (machineAcc machine) currentIP
