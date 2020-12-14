@@ -12,40 +12,60 @@ import qualified Data.Set as S
 import qualified Data.Map.Strict as M
 import Data.Map.Strict ((!))
 
-import Data.Maybe
-
 data QuantifiedBag = QuantifiedBag Integer String
     deriving (Show, Eq, Ord)
+
+qName (QuantifiedBag _ n) = n
+qCount (QuantifiedBag n _) = n
+
+type Bags = S.Set String
+type QBags = S.Set QuantifiedBag
+type BagRules = M.Map String QBags
+type InvertBags = M.Map String Bags
 
 
 main :: IO ()
 main = 
   do  text <- TIO.readFile "data/advent07.txt"
       let bags = successfulParse text
-      -- print bags
-      -- print $ invertBags bags
+      -- dumpBagDot bags
       print $ part1 bags
       print $ part2 bags
+
+-- dumpBagDot bags = 
+--     do writeFile "a07dump.dot" "digraph {\n"
+--        mapM_ dumpABag (M.assocs bags)
+--        appendFile "a07dump.dot" "shiny_gold [fillcolor = gold1 ]\n"
+--        appendFile "a07dump.dot" "}\n"
+
+-- dumpABag (bag, contents) =
+--     mapM_ (dumpALink bag) (S.toList contents)
+
+-- dumpALink bag (QuantifiedBag n name) =
+--     do  let name' = squashName name
+--         let bag' = squashName bag
+--         let txt = bag' ++ " -> " ++ name' ++ "\n"
+--         appendFile "a07dump.dot" txt
+
+-- squashName :: String -> String
+-- squashName name = [if c == ' ' then '_' else c | c <- name]
+
 
 part1 bags = S.size $ S.delete "shiny gold" containers
     where containers = bagsContaining (invertBags bags) (S.singleton "shiny gold") S.empty
 
 part2 bags = (nContainedBags bags "shiny gold") - 1
 
+invertBags :: BagRules -> InvertBags
 invertBags bags = foldr addInvert M.empty $ concatMap swapPair $ M.assocs bags 
     where swapPair (a, bs) = [(qName b, a) | b <- S.toList bs]
 
-addInvert :: (String, String) -> (M.Map String (S.Set String)) -> (M.Map String (S.Set String))
-addInvert (k, v) m = 
-    if k `M.member` m
-    then M.insert k v' m
-    else M.insert k (S.singleton v) m
-    where v' = S.insert v (m!k)
+addInvert :: (String, String) -> InvertBags -> InvertBags
+addInvert (k, v) m = M.insert k v' m
+    where v' = S.insert v (M.findWithDefault S.empty k m)
 
-qName (QuantifiedBag _ n) = n
-qCount (QuantifiedBag n _) = n
 
-bagsContaining :: (M.Map String (S.Set String)) -> (S.Set String) -> (S.Set String) -> (S.Set String)
+bagsContaining :: InvertBags -> Bags -> Bags -> Bags
 bagsContaining iBags agenda result 
     | S.null agenda = result
     | otherwise = bagsContaining iBags agenda'' (S.insert thisColour result)
@@ -53,9 +73,9 @@ bagsContaining iBags agenda result
           agenda' = S.delete thisColour agenda
           agenda'' = if thisColour `S.member` result
                      then agenda'
-                     else S.union (fromMaybe S.empty (M.lookup thisColour iBags)) agenda' 
+                     else S.union (M.findWithDefault S.empty thisColour iBags) agenda' 
 
-nContainedBags :: (M.Map String (S.Set QuantifiedBag)) -> String -> Integer
+nContainedBags :: BagRules -> String -> Integer
 nContainedBags bags thisBag = 1 + (sum $ map subCount others)
     where others = S.toList $ bags!thisBag
           subCount b = (qCount b) * (nContainedBags bags (qName b))
@@ -79,8 +99,7 @@ ruleP = (,) <$> bagNameP <* " contain " <*> bagContentsP <* "."
 rulesP = M.fromList <$> sepBy ruleP endOfLine
 
 
-
--- successfulParse :: Text -> [[S.Set Char]]
+successfulParse :: Text -> BagRules
 successfulParse input = 
   case parseOnly rulesP input of
     Left  _err -> M.empty -- TIO.putStr $ T.pack $ parseErrorPretty err
