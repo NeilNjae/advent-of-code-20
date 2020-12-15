@@ -9,7 +9,6 @@ main =
         let firstInvalid = part1 nums
         print firstInvalid
         print $ part2 firstInvalid nums
-        -- print $ head $ part2 nums
 
 part1 nums = fst $ head $ filter (not . valid) $ slidingWindow 25 nums
 
@@ -20,7 +19,8 @@ valid (target, window) = not $ null [(x, y) | x <- window, y <- window, x + y ==
 
 
 part2 target nums = (maximum section) + (minimum section)
-    where section = head $ filter (sumsToTarget target) $ subStrings nums
+    where section = head $ filter (sumsToTarget target) $ subStrings smallNums
+          smallNums = dropWhileEnd (>= target) nums
 
 -- subStrings :: [a] -> [[a]]
 subStrings = (concatMap inits) . tails
