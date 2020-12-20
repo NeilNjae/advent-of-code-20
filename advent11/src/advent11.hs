@@ -85,7 +85,8 @@ neighbourhood seats here = S.intersection (M.keysSet seats) (neighbours here)
 allNeighbourhoods :: Seats -> Neighbourhood
 allNeighbourhoods seats = M.mapWithKey (\h _ -> neighbourhood seats h) seats
 
-occupiedNeighbours seats nbrs here = M.filter (== Occupied) $ M.restrictKeys seats (nbrs!here)
+occupiedNeighbours seats nbrs here = M.filter (== Occupied) 
+  $ M.restrictKeys seats (nbrs!here)
 
 
 onSightLine :: Position -> Direction -> Position -> Bool
@@ -106,14 +107,11 @@ closestInDirection seats here direction = take 1 sortedSeats
         sortedSeats = sortOn (manhattan here) seatsInDirection 
 
 closestInSight :: Seats -> Position -> (S.Set Position)
-closestInSight seats here = S.fromList $ concatMap (closestInDirection seats here) [d | d <- [Up .. UpLeft]]
+closestInSight seats here = S.fromList 
+  $ concatMap (closestInDirection seats here) [d | d <- [Up .. UpLeft]]
 
 allSightNeighbourhoods :: Seats -> Neighbourhood
 allSightNeighbourhoods seats = M.mapWithKey (\h _ -> closestInSight seats h) seats
-
--- occupiedInSight :: Seats -> Position -> Seats
--- occupiedInSight seats here = M.filter (== Occupied) $ M.restrictKeys seats $ closestInSight seats here
-
 
 
 readGrid :: String -> (Seats, Position)

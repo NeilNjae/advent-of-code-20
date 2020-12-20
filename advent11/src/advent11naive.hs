@@ -56,7 +56,9 @@ ruleB seats here thisSeat
   where nOccs = M.size $ occupiedInSight seats here
 
 
-neighbours (r, c) = S.delete (r, c) $ S.fromList [(r + dr, c + dc) | dr <- [-1, 0, 1], dc <- [-1, 0, 1]]
+neighbours (r, c) = S.delete (r, c) 
+  $ S.fromList [ (r + dr, c + dc) 
+               | dr <- [-1, 0, 1], dc <- [-1, 0, 1]]
 
 neighbourhood seats here = M.restrictKeys seats (neighbours here)
 occupiedNeighbours seats here = M.filter (== Occupied) $ neighbourhood seats here
@@ -75,15 +77,18 @@ onSightLine (r0, c0) UpRight   (r, c) = ((r - r0) < 0) && ((r - r0) == (c0 - c))
 manhattan (r1, c1) (r2, c2) = abs (r1 - r2) + abs (c1 - c2)
 
 closestInDirection seats here direction = take 1 sortedSeats
-  -- where seatsInDirection = M.keys $ M.filterWithKey (\o _ -> onSightLine here direction o) seats
   where seatsInDirection = filter (onSightLine here direction) $ M.keys seats
         sortedSeats = sortOn (manhattan here) seatsInDirection 
 
 closestInSight :: Seats -> Position -> (S.Set Position)
-closestInSight seats here = S.fromList $ concatMap (closestInDirection seats here) [d | d <- [Up .. UpLeft]]
+closestInSight seats here = 
+  S.fromList $ concatMap (closestInDirection seats here) 
+                         [d | d <- [Up .. UpLeft]]
 
 occupiedInSight :: Seats -> Position -> Seats
-occupiedInSight seats here = M.filter (== Occupied) $ M.restrictKeys seats $ closestInSight seats here
+occupiedInSight seats here = M.filter (== Occupied) 
+  $ M.restrictKeys seats 
+  $ closestInSight seats here
 
 
 readGrid :: String -> (Seats, Position)
