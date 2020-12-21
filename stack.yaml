@@ -46,6 +46,7 @@ packages:
 - advent09
 - advent10
 - advent11
+- advent12
 
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
