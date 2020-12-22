@@ -17,12 +17,13 @@ type Position = (Int, Int) -- (x, y)
 data Action a = N a | S a | E a | W a | L a | R a | F a
   deriving (Show, Eq, Ord)
 
-data Ship = Ship { direction :: Direction, position :: Position }
-  deriving (Show, Eq, Ord)
+-- data Ship = Ship { direction :: Direction, position :: Position }
+--   deriving (Show, Eq, Ord)
 
-data ShipW = ShipW { positionW :: Position 
-                   , waypoint :: Position
-                   }
+data Ship = Ship { position :: Position 
+                 , direction :: Direction
+                 , waypoint :: Position
+                 }
   deriving (Show, Eq, Ord)
 
 
@@ -38,12 +39,12 @@ main =
 
 part1 actions = manhattan (position ship1) start
   where start = (0, 0)
-        ship0 = Ship {position = start, direction = East }
+        ship0 = Ship {position = start, direction = East, waypoint = (10, 1)}
         ship1 = foldl act ship0 actions
 
-part2 actions = manhattan (positionW ship1) start
+part2 actions = manhattan (position ship1) start
   where start = (0, 0)
-        ship0 = ShipW {positionW = start, waypoint = (10, 1)}
+        ship0 = Ship {position = start, direction = East, waypoint = (10, 1)}
         ship1 = foldl actW ship0 actions
 
 -- apAc actions = ship1
@@ -56,6 +57,7 @@ part2 actions = manhattan (positionW ship1) start
 --         ship0 = ShipW {positionW = start, waypoint = (10, 1) }
 --         ship1 = foldl actW ship0 actions
 
+act :: Ship -> Action Int -> Ship
 act Ship{..} (N d) = Ship { position = dDelta d North position, ..}
 act Ship{..} (S d) = Ship { position = dDelta d South position, ..}
 act Ship{..} (W d) = Ship { position = dDelta d West  position, ..}
@@ -65,14 +67,14 @@ act Ship{..} (R a) = Ship { direction = d, ..} where d = (iterate succW directio
 act Ship{..} (F d) = Ship { position = dDelta d direction position, ..} 
 
 
-actW ShipW{..} (N d) = ShipW { waypoint = dDelta d North waypoint, ..}
-actW ShipW{..} (S d) = ShipW { waypoint = dDelta d South waypoint, ..}
-actW ShipW{..} (W d) = ShipW { waypoint = dDelta d West  waypoint, ..}
-actW ShipW{..} (E d) = ShipW { waypoint = dDelta d East  waypoint, ..}
-actW ShipW{..} (L a) = ShipW { waypoint = d, ..} where d = (iterate rotL waypoint) !! (a `div` 90)
-actW ShipW{..} (R a) = ShipW { waypoint = d, ..} where d = (iterate rotR waypoint) !! (a `div` 90)
-actW ShipW{..} (F d) = ShipW { positionW = p', ..} 
-  where (x, y) = positionW
+actW Ship{..} (N d) = Ship { waypoint = dDelta d North waypoint, ..}
+actW Ship{..} (S d) = Ship { waypoint = dDelta d South waypoint, ..}
+actW Ship{..} (W d) = Ship { waypoint = dDelta d West  waypoint, ..}
+actW Ship{..} (E d) = Ship { waypoint = dDelta d East  waypoint, ..}
+actW Ship{..} (L a) = Ship { waypoint = d, ..} where d = (iterate rotL waypoint) !! (a `div` 90)
+actW Ship{..} (R a) = Ship { waypoint = d, ..} where d = (iterate rotR waypoint) !! (a `div` 90)
+actW Ship{..} (F d) = Ship { position = p', ..} 
+  where (x, y) = position
         (dx, dy) = waypoint
         p' = (x + (d* dx), y + (d * dy))
 

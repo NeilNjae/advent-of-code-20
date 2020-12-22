@@ -17,8 +17,8 @@ main :: IO ()
 main = 
   do  text <- TIO.readFile "data/advent13.txt"
       let (timestamp, busses) = successfulParse text
-      print timestamp
-      print busses
+      -- print timestamp
+      -- print busses
       print $ part1 timestamp busses
       print $ part2 busses
 
