@@ -46,15 +46,15 @@ part2 actions = manhattan (positionW ship1) start
         ship0 = ShipW {positionW = start, waypoint = (10, 1)}
         ship1 = foldl actW ship0 actions
 
-apAc actions = ship1
-  where start = (0, 0)
-        ship0 = Ship {position = start, direction = East }
-        ship1 = foldl act ship0 actions
+-- apAc actions = ship1
+--   where start = (0, 0)
+--         ship0 = Ship {position = start, direction = East }
+--         ship1 = foldl act ship0 actions
 
-apAcW actions = ship1
-  where start = (0, 0)
-        ship0 = ShipW {positionW = start, waypoint = (10, 1) }
-        ship1 = foldl actW ship0 actions
+-- apAcW actions = ship1
+--   where start = (0, 0)
+--         ship0 = ShipW {positionW = start, waypoint = (10, 1) }
+--         ship1 = foldl actW ship0 actions
 
 act Ship{..} (N d) = Ship { position = dDelta d North position, ..}
 act Ship{..} (S d) = Ship { position = dDelta d South position, ..}
@@ -63,9 +63,7 @@ act Ship{..} (E d) = Ship { position = dDelta d East  position, ..}
 act Ship{..} (L a) = Ship { direction = d, ..} where d = (iterate predW direction) !! (a `div` 90)
 act Ship{..} (R a) = Ship { direction = d, ..} where d = (iterate succW direction) !! (a `div` 90)
 act Ship{..} (F d) = Ship { position = dDelta d direction position, ..} 
-  -- where (x, y) = position
-  --       (dx, dy) = (delta direction)
-  --       p' = (x + (d * dx), y + (d * dy))
+
 
 actW ShipW{..} (N d) = ShipW { waypoint = dDelta d North waypoint, ..}
 actW ShipW{..} (S d) = ShipW { waypoint = dDelta d South waypoint, ..}
