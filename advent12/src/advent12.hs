@@ -67,6 +67,7 @@ act Ship{..} (R a) = Ship { direction = d, ..} where d = (iterate succW directio
 act Ship{..} (F d) = Ship { position = dDelta d direction position, ..} 
 
 
+actW :: Ship -> Action Int -> Ship
 actW Ship{..} (N d) = Ship { waypoint = dDelta d North waypoint, ..}
 actW Ship{..} (S d) = Ship { waypoint = dDelta d South waypoint, ..}
 actW Ship{..} (W d) = Ship { waypoint = dDelta d West  waypoint, ..}
@@ -76,7 +77,7 @@ actW Ship{..} (R a) = Ship { waypoint = d, ..} where d = (iterate rotR waypoint)
 actW Ship{..} (F d) = Ship { position = p', ..} 
   where (x, y) = position
         (dx, dy) = waypoint
-        p' = (x + (d* dx), y + (d * dy))
+        p' = (x + (d * dx), y + (d * dy))
 
 rotL (x, y) = (-y, x)
 rotR (x, y) = (y, -x)
