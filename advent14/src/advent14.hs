@@ -26,7 +26,7 @@ data Machine = Machine { mMemory :: Memory
                        , mMask1 :: Int64
                        } deriving (Show, Eq)
 
-emtpyMachine = Machine M.empty M.empty (complement 0) 0
+emptyMachine = Machine M.empty M.empty (complement 0) 0
 
 
 main :: IO ()
@@ -44,8 +44,9 @@ part2 program = sum $ M.elems $ mMemory finalMachine
   where finalMachine = executeInstructions2 program
 
 executeInstructions1 instructions = 
-  foldl' executeInstruction1 emtpyMachine instructions
+  foldl' executeInstruction1 emptyMachine instructions
 
+executeInstruction1 :: Machine -> Instruction -> Machine
 executeInstruction1 machine (Mask mask) = makeMask machine mask
 executeInstruction1 machine (Assignment loc value) = 
   assignValue machine loc value
@@ -66,13 +67,14 @@ maskOnes mask = foldl' setBit zeroBits ones
   where ones = M.keys $ M.filter (== One) mask
 
 maskZeroes :: MaskMap -> Int64
-maskZeroes mask = complement $ foldl' setBit zeroBits ones
-  where ones = M.keys $ M.filter (== Zero) mask
+maskZeroes mask = foldl' clearBit (complement zeroBits) zeroes
+  where zeroes = M.keys $ M.filter (== Zero) mask
 
 
 executeInstructions2 instructions = 
-  foldl' executeInstruction2 emtpyMachine instructions
+  foldl' executeInstruction2 emptyMachine instructions
 
+executeInstruction2 :: Machine -> Instruction -> Machine
 executeInstruction2 machine (Mask mask) = machine {mMask = mask}
 executeInstruction2 machine (Assignment loc value) = machine {mMemory = mem'}
   where locs = map encodeMask $ applyAddressMask (mMask machine) $ decodeMask loc
