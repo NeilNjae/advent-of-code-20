@@ -7,6 +7,9 @@ import Data.STRef
 import qualified Data.Vector.Unboxed.Mutable as V
 
 
+type STInt s = STRef s Int
+type VInt s = V.MVector s Int
+
 main :: IO ()
 main = 
   do  let seed = [20, 0, 1, 11, 6, 3]
@@ -18,24 +21,25 @@ main =
 part1 seed = runGame seed 2020
 part2 seed = runGame seed 30000000
 
-zeroInt :: Int
-zeroInt = 0
-
-seedGame seed historySize = 
-  do round <- newSTRef $ length seed
-     word <- newSTRef $ last seed
-     history <- V.replicate historySize zeroInt
-     forM_ (zip (init seed) [1..]) $ \(t, s) -> V.write history t s
-     return (round, word, history)
-
+runGame :: [Int] -> Int -> Int
 runGame seed roundsNeeded =
   runST $ 
     do (round, word, history) <- seedGame seed roundsNeeded
-       gameStep roundsNeeded round word history
+       gameSteps roundsNeeded round word history
        readSTRef word
 
-gameStep :: Int -> STRef s Int -> STRef s Int -> V.MVector s Int -> ST s ()
-gameStep targetRound round word history =
+seedGame :: [Int] -> Int -> ST s (STInt s, STInt s,  VInt s)
+seedGame seed historySize = 
+  do round <- newSTRef $ length seed
+     word <- newSTRef $ last seed
+     history <- V.replicate historySize 0
+     forM_ (zip (init seed) [1..]) $ \(t, s) -> V.write history t s
+     return (round, word, history)
+
+
+-- gameSteps :: Int -> STRef s Int -> STRef s Int -> V.MVector s Int -> ST s ()
+gameSteps :: Int -> STInt s -> STInt s -> VInt s -> ST s ()
+gameSteps targetRound round word history =
   do roundVal <- readSTRef round
      if roundVal == targetRound
      then return ()
@@ -46,7 +50,7 @@ gameStep targetRound round word history =
            V.write history wordVal roundVal
            modifySTRef round (+1)
            writeSTRef word word'
-           gameStep targetRound round word history
+           gameSteps targetRound round word history
 
 
 speakWord :: Int -> Int -> Int

@@ -56,7 +56,6 @@ executables:
     source-dirs: src
     dependencies:
     - base >= 2 && < 6
-    - text
     - vector
 
   advent15slow:
@@ -64,6 +63,12 @@ executables:
     source-dirs: src
     dependencies:
     - base >= 2 && < 6
-    - text
     - containers
 
+  advent15loop:
+    main: advent15loop.hs
+    source-dirs: src
+    dependencies:
+    - base >= 2 && < 6
+    - vector
+    - monad-loops

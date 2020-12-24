@@ -3,7 +3,6 @@
 import Prelude hiding (round)
 import qualified Data.IntMap.Strict as M
 
-
 data Game = Game { round :: Int
                  , word :: Int
                  , history :: M.IntMap Int
