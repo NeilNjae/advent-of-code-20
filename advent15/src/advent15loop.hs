@@ -25,6 +25,11 @@ runGame seed roundsNeeded =
        gameLoop roundsNeeded round word history
        readSTRef word
 
+gameLoop targetRound round word history =
+    do gameStep round word history 
+         `untilM_` ((== targetRound) <$> readSTRef round)
+       return ()
+
 -- gameLoop targetRound round word history =
 --     do ( gameStep round word history 
 --          `untilM_` (do r <- readSTRef round
@@ -44,11 +49,16 @@ runGame seed roundsNeeded =
 --                (gameStep round word history ) 
 --        return ()
 
-gameLoop targetRound round word history =
-    do whileM_ (do r <- readSTRef round
-                   return $ r /= targetRound )
-               $ gameStep round word history
-       return ()
+-- gameLoop targetRound round word history =
+--     do whileM_ (do r <- readSTRef round
+--                    return $ r /= targetRound )
+--                $ gameStep round word history
+--        return ()
+
+-- gameLoop targetRound round word history =
+--     do whileM_ ((/= targetRound) <$> readSTRef round)
+--                $ gameStep round word history
+--        return ()
 
 seedGame seed historySize = 
   do round <- newSTRef $ length seed
