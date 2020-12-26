@@ -59,4 +59,11 @@ executables:
     - base >= 2 && < 6
     - containers
     - linear
-    - vector
+
+  advent17a:
+    main: advent17a.hs
+    source-dirs: src
+    dependencies:
+    - base >= 2 && < 6
+    - containers
+    - linear
