@@ -29,15 +29,14 @@ type RuleSet = M.IntMap Rule
 
 main :: IO ()
 main = 
-  do  text <- TIO.readFile "data/advent19b.txt"
-      -- print text
+  do  text <- TIO.readFile "data/advent19.txt"
       let (rules, messages) = successfulParse text
       let messagesT = map T.pack messages
-      -- print rules
-      -- print messages
+      -- TIO.writeFile "rules19.mega.txt" $ T.pack $ show rules
+      print $ length rules
+      print $ length messages
       print $ part1 rules messagesT
       print $ part2 rules messagesT
-      -- print $ part2 text
 
 setup fname = 
   do text <- TIO.readFile fname
@@ -47,7 +46,6 @@ setup fname =
      let updatedRules = M.union newRules rules
      let myParser = (makeParser updatedRules (See 0)) -- <* eof
      return (myParser, updatedRules, messagesT)
-
 
 
 part1 = countMatches
@@ -60,18 +58,17 @@ countMatches rules messages
   = length 
   $ filter isRight 
   $ map (parse myParser "message") messages
-  where myParser = (makeParser rules (See 0)) -- <* eof
+  where myParser = (makeParser rules (See 0)) <* eof
 
 prettyResults rs = map p rs
   where p (Left e) = errorBundlePretty e
         p (Right r) = "^" ++ show r
 
-
 -- Generate the rules
 
 makeParser :: RuleSet -> Rule -> Parser ()
 makeParser m (Letter c) = void $ char c
-makeParser m (Then rs) = mapM_ (makeParser m) rs
+makeParser m (Then rs) = mapM_ (\r -> try (makeParser m r)) rs
 makeParser m (Or a b) = (try (makeParser m a)) <|> (makeParser m b)
 makeParser m (See i) = makeParser m (m!i)
 

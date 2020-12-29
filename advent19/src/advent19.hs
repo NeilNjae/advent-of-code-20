@@ -12,9 +12,7 @@ import Data.Either
 
 
 data Rule = Letter Char 
-          -- | Then2 Rule Rule
-          -- | Then3 Rule Rule Rule
-          | Then [Rule]
+           | Then [Rule]
           | Or Rule Rule
           | See Int
           deriving (Show, Eq)
@@ -29,7 +27,6 @@ main =
       let (rules, messages) = parse inputP text
       print $ part1 rules messages
       print $ part2 rules messages
-      -- print $ part2 text
 
 setup fname = 
   do text <- readFile fname
@@ -66,6 +63,7 @@ makeParser m (See i) = makeParser m (m!i)
 
 
 -- Parse the input
+inputP = (,) <$> rulesP <* blankLines <*> messagesP
 
 rulesP = M.fromList <$> ruleP `sepBy` endOfLine
 ruleP = (,) <$> decimal <* (string ": ") <*> ruleBodyP
@@ -75,9 +73,6 @@ letterRuleP = Letter <$> between (string "\"") (string "\"") get
 orRuleP = Or <$> thenRuleP <* (string " | ") <*> thenRuleP
 thenRuleP = Then <$> seeRuleP `sepBy` (string " ")
 seeRuleP = See <$> decimal
-
-
-inputP = (,) <$> rulesP <* blankLines <*> messagesP
 
 messagesP = (munch1 isAlpha) `sepBy` endOfLine
 

@@ -17,17 +17,10 @@ import Data.Either
 
 
 data Rule = Letter Char 
-          -- | Then2 Rule Rule
-          -- | Then3 Rule Rule Rule
           | Then [Rule]
           | Or Rule Rule
           | See Int
           deriving (Show, Eq)
-
--- data Tree = TEmpty
---           | TLetter Char
---           | TThen [Tree]
---           deriving (Show, Eq)
 
 
 type RuleSet = M.IntMap Rule
@@ -35,15 +28,15 @@ type RuleSet = M.IntMap Rule
 
 main :: IO ()
 main = 
-  do  text <- TIO.readFile "data/advent19b.txt"
+  do  text <- TIO.readFile "data/advent19.txt"
       -- print text
       let (rules, messages) = successfulParse inputP text
       let messagesT = map T.pack messages
-      -- print rules
-      -- print messages
+      -- TIO.writeFile "rules19.atto.txt" $ T.pack $ show rules
+      print $ length rules
+      print $ length messages
       print $ part1 rules messagesT
       print $ part2 rules messagesT
-      -- print $ part2 text
 
 setup fname = 
   do text <- TIO.readFile fname
@@ -73,8 +66,8 @@ countMatches rules messages
 
 makeParser :: RuleSet -> Rule -> Parser ()
 makeParser m (Letter c) = void $ char c
-makeParser m (Then rs) = mapM_ (makeParser m) rs
-makeParser m (Or a b) = (makeParser m a) <|> (makeParser m b)
+makeParser m (Then rs) = mapM_ (\r -> try (makeParser m r)) rs
+makeParser m (Or a b) = (try (makeParser m a)) <|> (makeParser m b)
 makeParser m (See i) = makeParser m (m!i)
 
 
