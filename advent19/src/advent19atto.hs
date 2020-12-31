@@ -22,7 +22,6 @@ data Rule = Letter Char
           | See Int
           deriving (Show, Eq)
 
-
 type RuleSet = M.IntMap Rule
 
 
