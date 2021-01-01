@@ -14,7 +14,7 @@ import Data.Array.Unboxed ((!))
 import qualified Data.Map.Strict as M
 import Data.Bool (bool)
 import Data.List (delete)
-import Control.Monad (guard)
+import Control.Monad (guard, foldM)
 -- import Data.Either (fromRight)
 
 
@@ -43,8 +43,8 @@ main =
 
 
 part1 rMax arrangement 
-  = product $ M.elems 
-  $ M.map tId 
+  = product 
+  $ M.elems $ M.map tId 
   $ M.filterWithKey (isCorner rMax) arrangement
 
 part2 seaMonster image = minimum $ map (countRoughness seaMonster) transImages
@@ -55,7 +55,6 @@ part2 seaMonster image = minimum $ map (countRoughness seaMonster) transImages
 readSeaMonster :: IO Pixels
 readSeaMonster = 
   do text <- TIO.readFile "data/advent20seamonster.txt"
-     -- return $ fromRight (A.listArray ((0, 0), (1, 1)) []) $ parseOnly pixelsP text
      return $ case parseOnly pixelsP text of
       Left  _err -> A.listArray ((0, 0), (1, 1)) []
       Right seaMonster -> seaMonster
@@ -67,23 +66,20 @@ isCorner l (r, 0) _ = r == l
 isCorner l (r, c) _ = r == l && c == l
 
 arrangeTiles :: Int -> [Tile] -> Arrangement
-arrangeTiles rMax tiles = head $ arrange (0, 0) rMax M.empty tiles
+arrangeTiles rMax tiles = fst $ head $ foldM arrange (M.empty, tiles) locations
+  where locations = init $ scanl nextLoc (0, 0) tiles
+        nextLoc (r, c) _ = if c == rMax then (r + 1, 0) else (r, c + 1)
+        -- (arrangement, _) = head $ foldM arrange (M.empty, tiles) locations
 
-arrange :: Coord -> Int -> Arrangement -> [Tile] -> [Arrangement]
--- arrange h _ g ts | trace (show h ++ " " ++ show (M.map tId g) ++ " > " ++ show (length ts)) False = undefined
-arrange _ _ grid [] = return grid
-arrange (r, c) cMax grid tiles = 
+arrange :: (Arrangement, [Tile]) -> Coord -> [(Arrangement, [Tile])]
+arrange (grid, tiles) (r, c) = 
   do  tile <- tiles
       transTile <- transforms tile
       guard $ if r == 0 then True else matchVertical tileAbove transTile
       guard $ if c == 0 then True else matchHorizontal tileLeft transTile
-      arrange (r', c')
-              cMax
-              (M.insert (r, c) transTile grid)
-              (delete tile tiles)
+      return (M.insert (r, c) transTile grid, delete tile tiles)
   where tileAbove = grid M.! (r - 1 ,  c)
         tileLeft = grid M.! (r, c - 1)
-        (r', c') = if c == cMax then (r + 1, 0) else (r, c + 1)
 
 
 matchHorizontal tile1 tile2 = (rightBorder tile1) == (leftBorder tile2)
