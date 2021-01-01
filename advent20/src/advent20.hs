@@ -15,7 +15,6 @@ import qualified Data.Map.Strict as M
 import Data.Bool (bool)
 import Data.List (delete)
 import Control.Monad (guard, foldM)
--- import Data.Either (fromRight)
 
 
 type Coord = (Int, Int)
@@ -69,7 +68,6 @@ arrangeTiles :: Int -> [Tile] -> Arrangement
 arrangeTiles rMax tiles = fst $ head $ foldM arrange (M.empty, tiles) locations
   where locations = init $ scanl nextLoc (0, 0) tiles
         nextLoc (r, c) _ = if c == rMax then (r + 1, 0) else (r, c + 1)
-        -- (arrangement, _) = head $ foldM arrange (M.empty, tiles) locations
 
 arrange :: (Arrangement, [Tile]) -> Coord -> [(Arrangement, [Tile])]
 arrange (grid, tiles) (r, c) = 
