@@ -10,26 +10,33 @@ import Control.Applicative
 -- import Control.Applicative.Combinators
 
 import qualified Data.Set as S
+import qualified Data.IntMap.Strict as M
 import qualified Data.Sequence as Q
 import Data.Sequence (Seq (Empty, (:<|), (:|>)), (<|), (|>))
+
+import Data.Foldable (toList)
+import Data.Hashable (hash)
+
 
 type Deck = Q.Seq Int
 type Game = (Deck, Deck)
 
 data Player = P1 | P2 deriving (Show, Eq)
 
+type Cache = M.IntMap (S.Set Game)
+
 
 main :: IO ()
 main = 
   do  text <- TIO.readFile "data/advent22.txt"
       let decks = successfulParse text
-      print decks
-      print $ play decks
+      -- print decks
+      -- print $ play decks
       print $ part1 decks
       print $ part2 decks
 
 part1 decks = score $ winningDeck $ play decks
-part2 decks = score $ snd $ playRecursive decks S.empty
+part2 decks = score $ snd $ playRecursive decks M.empty
 
 play = until finished playRound 
 
@@ -43,26 +50,22 @@ playRound ((x :<| xs), (y :<| ys))
   | x < y     = (xs,           ys |> y |> x)
   | otherwise = (xs |> x |> y, ys)
 
-winningDeck game = case (winner game) of
-  P1 -> fst game
-  P2 -> snd game
+winningDeck (Empty, ys) = ys
+winningDeck (xs,    _)  = xs
 
-winner :: Game -> Player
-winner (Empty, ys) = P2
-winner (xs,    _)  = P1
 
 score :: Deck -> Int
 score = Q.foldrWithIndex (\i c s -> s + (i + 1) * c) 0 . Q.reverse
 
 
-playRecursive :: Game -> (S.Set Game) -> (Player, Deck)
+playRecursive :: Game -> Cache -> (Player, Deck)
 playRecursive (Empty, ys) _ = (P2, ys)
 playRecursive (xs, Empty) _ = (P1, xs)
 playRecursive g@(x :<| xs, y :<| ys) seen 
-  | g `S.member` seen = (P1, x :<| xs)
+  | g `inCache` seen = (P1, x :<| xs)
   | (lengthAtLeast x xs) && (lengthAtLeast y ys) = playRecursive subG seen'
   | otherwise = playRecursive compareG seen'
-  where seen' = S.insert g seen
+  where seen' = enCache g seen
         (subWinner, _) = playRecursive (Q.take x xs, Q.take y ys) seen'
         subG = updateDecks subWinner g
         compareWinner = if x < y then P2 else P1
@@ -75,6 +78,24 @@ updateDecks P2 (x :<| xs, y :<| ys) = (xs, ys |> y |> x)
 lengthAtLeast n s = Q.length s >= n
 
 
+hashGame (xs, ys) = 
+  hash ( toList $ Q.take 2 xs
+       , toList $ Q.take 2 ys
+       -- , Q.length xs
+       -- , Q.length ys
+       )
+
+inCache :: Game -> Cache -> Bool
+inCache game cache = case (M.lookup h cache) of
+  Just games -> game `S.member` games
+  Nothing -> False
+  where h = hashGame game
+
+enCache :: Game -> Cache -> Cache
+enCache game cache = case (M.lookup h cache) of
+  Just games -> M.insert h (S.insert game games) cache
+  Nothing -> M.insert h (S.singleton game) cache
+  where h = hashGame game
 
 
 -- Parse the input file
