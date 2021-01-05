@@ -35,8 +35,8 @@ main =
       print $ part1 decks
       print $ part2 decks
 
-part1 decks = score $ winningDeck $ play decks
-part2 decks = score $ snd $ playRecursive decks M.empty
+part1 game = score $ winningDeck $ play game
+part2 game = score $ snd $ playRecursive game M.empty
 
 play = until finished playRound 
 
@@ -50,13 +50,12 @@ playRound ((x :<| xs), (y :<| ys))
   | x < y     = (xs,           ys |> y |> x)
   | otherwise = (xs |> x |> y, ys)
 
+winningDeck :: Game -> Deck
 winningDeck (Empty, ys) = ys
 winningDeck (xs,    _)  = xs
 
-
 score :: Deck -> Int
-score = Q.foldrWithIndex (\i c s -> s + (i + 1) * c) 0 . Q.reverse
-
+score = sum . zipWith (*) [1..] . toList . Q.reverse
 
 playRecursive :: Game -> Cache -> (Player, Deck)
 playRecursive (Empty, ys) _ = (P2, ys)
@@ -68,8 +67,8 @@ playRecursive g@(x :<| xs, y :<| ys) seen
   where seen' = enCache g seen
         (subWinner, _) = playRecursive (Q.take x xs, Q.take y ys) seen'
         subG = updateDecks subWinner g
-        compareWinner = if x < y then P2 else P1
-        compareG = updateDecks compareWinner g
+        compareTops = if x < y then P2 else P1
+        compareG = updateDecks compareTops g
 
 
 updateDecks P1 (x :<| xs, y :<| ys) = (xs |> x |> y, ys)
