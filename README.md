@@ -9,6 +9,7 @@ Code to solve the [Advent of Code](http://adventofcode.com/2020/) puzzles. This 
 
 The [Stack documentation](https://docs.haskellstack.org/en/stable/README/) and [How I Start: Haskell](http://howistart.org/posts/haskell/1/) are good sources of using the tools. 
 
+
 # Toolchain
 
 I'm using the basic Haskell Platform installation, together with `stack` to manage the packages and dependencies (install with
@@ -82,7 +83,27 @@ stack exec hp2ps advent01.hp
 
 # Packages
 
-Stack is using the [14.16-lts resolver](https://www.stackage.org/lts-16.25) for packages, so make sure you read the [correct documentation for the packages included in it](https://www.stackage.org/lts-16.25/docs).
+Stack is using the [14.16-lts resolver](https://www.stackage.org/lts-16.25) for packages, so make sure you read the [correct documentation for the packages included in it](https://www.stackage.org/lts-16.25/docs). 
+
+Packages I used a lot:
+
+* [Containers](https://hackage.haskell.org/package/containers) (and some [better documentation](https://haskell-containers.readthedocs.io/en/latest/intro.html)); [Unordered containers](https://hackage.haskell.org/package/unordered-containers) is a mostly-equivalent alternative.
+* [Attoparsec](https://hackage.haskell.org/package/attoparsec) (and [Megaparsec](https://hackage.haskell.org/package/megaparsec), and [ReadP](https://hackage.haskell.org/package/base-4.14.1.0/docs/Text-ParserCombinators-ReadP.html) once).
+
+There are somewhat decent [tutorials on Megaparsec](https://markkarpov.com/tutorial/megaparsec.html) and [Attoparsec](https://www.schoolofhaskell.com/school/starting-with-haskell/libraries-and-frameworks/text-manipulation/attoparsec).
+
+Packages I didn't use much, but need to remember:
+
+* [Arithmoi](https://hackage.haskell.org/package/arithmoi) for number theory
+* [Pointed List](https://hackage.haskell.org/package/pointedlist-0.6.1) for zipper lists (sometimes circular)
+* [Vector](https://hackage.haskell.org/package/vector) for array-like things
+* [Linear](https://hackage.haskell.org/package/linear) for coordinate-vector like things
+* [Grid](https://hackage.haskell.org/package/grid) for 2-d grids
+* [Graph-wrapper](https://hackage.haskell.org/package/graph-wrapper) for graphs
+* [Lens](https://hackage.haskell.org/package/lens) (and a [summary of operators](https://github.com/ekmett/lens/wiki/Operators)). I didn't use these much this year, but did a lot last year.
+* [RWS](https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-RWS-Lazy.html) (Reader-Writer-State monad stack); again, used a lot last year but not this year
+* [Monad loops](https://hackage.haskell.org/package/monad-loops-0.4.3/docs/Control-Monad-Loops.html), and [a description](https://conscientiousprogrammer.com/blog/2015/12/11/24-days-of-hackage-2015-day-11-monad-loops-avoiding-writing-recursive-functions-by-refactoring/)
+* [Replace-Megaparsec](https://github.com/jamesdbrock/replace-megaparsec), for using Mpc for all sorts of things traditionally done with regex substitutions.
 
 # Readme
 

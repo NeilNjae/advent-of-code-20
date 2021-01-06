@@ -57,7 +57,26 @@
 <p>Generate the profile graph with</p>
 <pre><code>stack exec hp2ps advent01.hp</code></pre>
 <h1 id="packages">Packages</h1>
-<p>Stack is using the <a href="https://www.stackage.org/lts-14.16">14.16-lts resolver</a> for packages, so make sure you read the <a href="https://www.stackage.org/lts-14.16/docs">correct documentation for the packages included in it</a>.</p>
+<p>Stack is using the <a href="https://www.stackage.org/lts-16.25">14.16-lts resolver</a> for packages, so make sure you read the <a href="https://www.stackage.org/lts-16.25/docs">correct documentation for the packages included in it</a>.</p>
+<p>Packages I used a lot:</p>
+<ul>
+<li><a href="https://hackage.haskell.org/package/containers">Containers</a> (and some <a href="https://haskell-containers.readthedocs.io/en/latest/intro.html">better documentation</a>); <a href="https://hackage.haskell.org/package/unordered-containers">Unordered containers</a> is a mostly-equivalent alternative.</li>
+<li><a href="https://hackage.haskell.org/package/attoparsec">Attoparsec</a> (and <a href="https://hackage.haskell.org/package/megaparsec">Megaparsec</a>, and <a href="https://hackage.haskell.org/package/base-4.14.1.0/docs/Text-ParserCombinators-ReadP.html">ReadP</a> once).</li>
+</ul>
+<p>There are somewhat decent <a href="https://markkarpov.com/tutorial/megaparsec.html">tutorials on Megaparsec</a> and <a href="https://www.schoolofhaskell.com/school/starting-with-haskell/libraries-and-frameworks/text-manipulation/attoparsec">Attoparsec</a>.</p>
+<p>Packages I didn’t use much, but need to remember:</p>
+<ul>
+<li><a href="https://hackage.haskell.org/package/arithmoi">Arithmoi</a> for number theory</li>
+<li><a href="https://hackage.haskell.org/package/pointedlist-0.6.1">Pointed List</a> for zipper lists (sometimes circular)</li>
+<li><a href="https://hackage.haskell.org/package/vector">Vector</a> for array-like things</li>
+<li><a href="https://hackage.haskell.org/package/linear">Linear</a> for coordinate-vector like things</li>
+<li><a href="https://hackage.haskell.org/package/grid">Grid</a> for 2-d grids</li>
+<li><a href="https://hackage.haskell.org/package/graph-wrapper">Graph-wrapper</a> for graphs</li>
+<li><a href="https://hackage.haskell.org/package/lens">Lens</a> (and a <a href="https://github.com/ekmett/lens/wiki/Operators">summary of operators</a>). I didn’t use these much this year, but did a lot last year.</li>
+<li><a href="https://hackage.haskell.org/package/mtl-2.2.2/docs/Control-Monad-RWS-Lazy.html">RWS</a> (Reader-Writer-State monad stack); again, used a lot last year but not this year</li>
+<li><a href="https://hackage.haskell.org/package/monad-loops-0.4.3/docs/Control-Monad-Loops.html">Monad loops</a>, and <a href="https://conscientiousprogrammer.com/blog/2015/12/11/24-days-of-hackage-2015-day-11-monad-loops-avoiding-writing-recursive-functions-by-refactoring/">a description</a></li>
+<li><a href="https://github.com/jamesdbrock/replace-megaparsec">Replace-Megaparsec</a>, for using Mpc for all sorts of things traditionally done with regex substitutions.</li>
+</ul>
 <h1 id="readme">Readme</h1>
 <p>Build this readme file wth</p>
 <pre><code>pandoc -s README.md &gt; README.html</code></pre>
