@@ -59,3 +59,13 @@ executables:
     - text
     - attoparsec
     - containers
+  
+  advent07graph:
+    main: advent07graph.hs
+    source-dirs: src
+    dependencies:
+    - base >= 2 && < 6
+    - text
+    - attoparsec
+    - containers
+    - graphite
